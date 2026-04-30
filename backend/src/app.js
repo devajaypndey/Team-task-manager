@@ -10,8 +10,16 @@ import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 
+// Trust proxy for secure cookies on Railway
+app.set("trust proxy", 1);
+
 // Middleware
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL
+].filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
