@@ -8,6 +8,7 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Member");
   const [loading, setLoading] = useState(false);
 
   if (user) return <Navigate to="/dashboard" replace />;
@@ -20,7 +21,7 @@ export default function SignupPage() {
     }
     setLoading(true);
     try {
-      await signup(name, email, password);
+      await signup(name, email, password, role);
       toast.success("Account created!");
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
@@ -87,6 +88,21 @@ export default function SignupPage() {
                 required
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-800/60 border border-surface-700 text-surface-100 placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30 transition-all"
               />
+            </div>
+
+            <div>
+              <label htmlFor="signup-role" className="block text-sm font-medium text-surface-300 mb-1.5">
+                Role
+              </label>
+              <select
+                id="signup-role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl bg-surface-800/60 border border-surface-700 text-surface-100 placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30 transition-all cursor-pointer"
+              >
+                <option value="Member">Member</option>
+                <option value="Admin">Admin</option>
+              </select>
             </div>
 
             <button

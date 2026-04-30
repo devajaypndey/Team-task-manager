@@ -1,4 +1,5 @@
 import { HiOutlineUser, HiOutlineCalendar } from "react-icons/hi";
+import { useAuth } from "../../context/AuthContext";
 
 const statusColor = {
   "To Do": "bg-surface-600/30 text-surface-300",
@@ -13,6 +14,7 @@ const priorityDot = {
 };
 
 export default function TaskCard({ task, onEdit, onStatusChange, isAdmin }) {
+  const { user } = useAuth();
   const isOverdue =
     task.dueDate && new Date(task.dueDate) < new Date() && task.status !== "Done";
 
@@ -63,7 +65,12 @@ export default function TaskCard({ task, onEdit, onStatusChange, isAdmin }) {
         <select
           value={task.status}
           onChange={(e) => onStatusChange(task._id, e.target.value)}
-          className={`text-xs px-2 py-1 rounded-lg border-0 cursor-pointer focus:outline-none ${statusColor[task.status]}`}
+          disabled={!isAdmin && task.assignedTo?._id !== user?._id}
+          className={`text-xs px-2 py-1 rounded-lg border-0 ${
+            (!isAdmin && task.assignedTo?._id !== user?._id) 
+              ? "opacity-50 cursor-not-allowed" 
+              : "cursor-pointer focus:outline-none"
+          } ${statusColor[task.status]}`}
         >
           <option value="To Do">To Do</option>
           <option value="In Progress">In Progress</option>

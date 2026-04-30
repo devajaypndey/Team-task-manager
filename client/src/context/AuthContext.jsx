@@ -27,8 +27,8 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  const signup = async (name, email, password) => {
-    const data = await signupUser(name, email, password);
+  const signup = async (name, email, password, role) => {
+    const data = await signupUser(name, email, password, role);
     setUser(data);
     return data;
   };

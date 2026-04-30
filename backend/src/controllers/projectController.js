@@ -5,6 +5,10 @@ import User from "../models/User.js";
 // POST /api/projects — create project, creator becomes Admin
 export const createProject = async (req, res) => {
   try {
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({ message: "Only global Admins can create projects" });
+    }
+
     const { name, description } = req.body;
     if (!name) return res.status(400).json({ message: "Project name is required" });
 
