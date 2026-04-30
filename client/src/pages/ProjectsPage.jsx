@@ -9,7 +9,10 @@ import EmptyState from "../components/common/EmptyState";
 import toast from "react-hot-toast";
 import { HiOutlinePlus, HiOutlineFolder } from "react-icons/hi";
 
+import { useAuth } from "../context/AuthContext";
+
 export default function ProjectsPage() {
+  const { user } = useAuth();
   const [showCreate, setShowCreate] = useState(false);
   const qc = useQueryClient();
 
@@ -34,13 +37,20 @@ export default function ProjectsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-surface-400">{projects?.length || 0} project(s)</p>
-        <button onClick={() => setShowCreate(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-primary-600 to-violet-600 text-white text-sm font-medium hover:from-primary-500 hover:to-violet-500 transition-all cursor-pointer">
-          <HiOutlinePlus className="w-4 h-4" /> New Project
-        </button>
+        {user?.role === "Admin" && (
+          <button onClick={() => setShowCreate(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-primary-600 to-violet-600 text-white text-sm font-medium hover:from-primary-500 hover:to-violet-500 transition-all cursor-pointer">
+            <HiOutlinePlus className="w-4 h-4" /> New Project
+          </button>
+        )}
       </div>
 
       {!projects?.length ? (
-        <EmptyState icon={HiOutlineFolder} title="No projects yet" description="Create your first project to get started." action={<button onClick={() => setShowCreate(true)} className="px-4 py-2 rounded-xl bg-primary-600/20 text-primary-300 text-sm font-medium hover:bg-primary-600/30 transition-colors cursor-pointer">Create Project</button>} />
+        <EmptyState 
+          icon={HiOutlineFolder} 
+          title="No projects yet" 
+          description={user?.role === "Admin" ? "Create your first project to get started." : "You have not been assigned to any projects yet."} 
+          action={user?.role === "Admin" ? <button onClick={() => setShowCreate(true)} className="px-4 py-2 rounded-xl bg-primary-600/20 text-primary-300 text-sm font-medium hover:bg-primary-600/30 transition-colors cursor-pointer">Create Project</button> : null} 
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
           {projects.map((p) => <ProjectCard key={p._id} project={p} />)}

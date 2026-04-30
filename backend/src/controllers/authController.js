@@ -8,13 +8,13 @@ const cookieOpts = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 // POST /api/auth/signup
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -25,11 +25,11 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, role: role || "Member" });
     const token = generateToken(user._id);
     res.cookie("token", token, cookieOpts);
 
-    res.status(201).json({ _id: user._id, name: user.name, email: user.email });
+    res.status(201).json({ _id: user._id, name: user.name, email: user.email, role: user.role });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("token", token, cookieOpts);
 
-    res.json({ _id: user._id, name: user.name, email: user.email });
+    res.json({ _id: user._id, name: user.name, email: user.email, role: user.role });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
