@@ -1,7 +1,7 @@
 import TaskCard from "./TaskCard";
 
 const columns = [
-  { key: "To Do", label: "To Do", accent: "bg-surface-400" },
+  { key: "To Do", label: "To Do", accent: "bg-pink-400" },
   { key: "In Progress", label: "In Progress", accent: "bg-amber-400" },
   { key: "Done", label: "Done", accent: "bg-emerald-400" },
 ];

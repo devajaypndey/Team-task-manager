@@ -2,9 +2,9 @@ import { HiOutlineUser, HiOutlineCalendar } from "react-icons/hi";
 import { useAuth } from "../../context/AuthContext";
 
 const statusColor = {
-  "To Do": "bg-surface-600/30 text-surface-300",
-  "In Progress": "bg-amber-500/20 text-amber-300",
-  Done: "bg-emerald-500/20 text-emerald-300",
+  "To Do": "bg-pink-400/20 text-pink-600",
+  "In Progress": "bg-amber-400/20 text-amber-500",
+  Done: "bg-emerald-400/20 text-emerald-600",
 };
 
 const priorityDot = {
