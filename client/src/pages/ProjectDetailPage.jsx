@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProject, addMember, removeMember, deleteProject } from "../api/projects";
 import { fetchProjectTasks, createTask, updateTask, deleteTask } from "../api/tasks";
+import { fetchAllUsers } from "../api/users";
 import { useAuth } from "../context/AuthContext";
 import KanbanBoard from "../components/tasks/KanbanBoard";
 import TaskForm from "../components/tasks/TaskForm";
@@ -23,6 +24,7 @@ export default function ProjectDetailPage() {
 
   const { data: project, isLoading: projLoading } = useQuery({ queryKey: ["project", id], queryFn: () => fetchProject(id) });
   const { data: tasks = [], isLoading: tasksLoading } = useQuery({ queryKey: ["tasks", id], queryFn: () => fetchProjectTasks(id) });
+  const { data: allUsers = [] } = useQuery({ queryKey: ["users"], queryFn: fetchAllUsers, enabled: !!project });
 
   const myRole = project?.members?.find((m) => m.user._id === user?._id)?.role;
   const isAdmin = myRole === "Admin";
@@ -117,8 +119,21 @@ export default function ProjectDetailPage() {
         </div>
         {isAdmin && (
           <form onSubmit={(e) => { e.preventDefault(); if (memberEmail.trim()) addMemberMut.mutate(memberEmail.trim()); }} className="flex gap-2">
-            <input type="email" value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)} placeholder="Add member by email..." className="flex-1 px-3 py-2 rounded-xl bg-surface-800/60 border border-surface-700 text-sm text-surface-100 placeholder-surface-500 focus:outline-none focus:border-primary-500 transition-all" />
-            <button type="submit" disabled={!memberEmail.trim()} className="px-3 py-2 rounded-xl bg-primary-600/20 text-primary-300 text-sm hover:bg-primary-600/30 disabled:opacity-50 transition-colors cursor-pointer"><HiOutlineUserAdd className="w-4 h-4" /></button>
+            <select
+              value={memberEmail}
+              onChange={(e) => setMemberEmail(e.target.value)}
+              className="flex-1 px-3 py-2 rounded-xl bg-surface-800/60 border border-surface-700 text-sm text-surface-100 placeholder-surface-500 focus:outline-none focus:border-primary-500 transition-all cursor-pointer"
+            >
+              <option value="">Select user to add...</option>
+              {allUsers
+                .filter((u) => !project.members?.some((m) => m.user._id === u._id))
+                .map((u) => (
+                  <option key={u._id} value={u.email}>
+                    {u.name} ({u.email}) - {u.role}
+                  </option>
+                ))}
+            </select>
+            <button type="submit" disabled={!memberEmail.trim() || addMemberMut.isPending} className="px-3 py-2 rounded-xl bg-primary-600/20 text-primary-300 text-sm hover:bg-primary-600/30 disabled:opacity-50 transition-colors cursor-pointer"><HiOutlineUserAdd className="w-4 h-4" /></button>
           </form>
         )}
       </div>

@@ -4,6 +4,7 @@ import {
   HiOutlineViewGrid,
   HiOutlineFolder,
   HiOutlineLogout,
+  HiOutlineUsers,
 } from "react-icons/hi";
 
 const links = [
@@ -46,6 +47,21 @@ export default function Sidebar() {
             {label}
           </NavLink>
         ))}
+        {user?.role === "Admin" && (
+          <NavLink
+            to="/admin/users"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? "bg-primary-600/20 text-primary-300 shadow-lg shadow-primary-600/10"
+                  : "text-surface-400 hover:text-surface-100 hover:bg-surface-800/60"
+              }`
+            }
+          >
+            <HiOutlineUsers className="w-5 h-5" />
+            Users
+          </NavLink>
+        )}
       </nav>
 
       {/* User section */}
