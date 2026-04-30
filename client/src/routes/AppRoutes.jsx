@@ -5,6 +5,7 @@ import SignupPage from "../pages/auth/SignupPage";
 import DashboardPage from "../pages/DashboardPage";
 import ProjectsPage from "../pages/ProjectsPage";
 import ProjectDetailPage from "../pages/ProjectDetailPage";
+import AdminDashboardPage from "../pages/AdminDashboardPage";
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/:id" element={<ProjectDetailPage />} />
+        <Route path="/admin/users" element={<AdminDashboardPage />} />
       </Route>
 
       {/* Default */}
